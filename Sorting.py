@@ -1,14 +1,17 @@
 from Calculate import Caculate
 from Calculate import OPERATOR_TIMES, OPERATOR_DEFICION, OPERATOR_ADD, OPERATOR_SUBTRACT
+from Delete import Delete
 
 som_plus = [1, '+', 2]
 som_minus = [3, '-', 4]
 som_times = [5, '*', 6]
 som_deficion = [7, '/', 8]
 som_plus_times = [9, '+', 10, '*', 5, '/', 5]
+som_haakje = [11, 'x', '(', 2, '+', 3, ')']
 
 Operatortimes1, Operatortimes2 = 'x', '*'
 OperatorDeficion1, OperatorDeficion2 = '/', '\\'
+HaakjeRight, HaakjeLeft = '(', ')'
 
 class Sorting(Caculate):
     def Caculete(ClientInput: list) -> str:
@@ -42,8 +45,19 @@ class Sorting(Caculate):
         return ClientInput[0]
 
     def Haakjes(ClientInput: list) -> list:
-        if ('(', ')' not in ClientInput):
+        Again = False
+        if ClientInput.count(HaakjeRight) + ClientInput.count(HaakjeLeft) < 1:
             return None
-
-
-print(Sorting.Caculete(som_plus_times))
+        for _ in enumerate(ClientInput):
+            Haakje1 =  ClientInput.index(HaakjeRight)
+            if ClientInput.count(HaakjeRight) > 1:
+                Haakje1 = ClientInput.index(Haakje1, HaakjeRight); Again = True
+            else: break
+        Haakje2 = ClientInput.index(HaakjeLeft)
+        del ClientInput[Haakje1]
+        del ClientInput[Haakje2-1]
+        Anser = Sorting.Caculete(ClientInput[Haakje1:Haakje2])
+        ClientInput = Delete(ClientInput, Anser, Haakje1+1)
+        if Again is True:
+            Sorting.Haakjes(ClientInput)
+        return ClientInput[0]
